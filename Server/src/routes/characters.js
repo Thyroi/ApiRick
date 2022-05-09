@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCharacters, createCharacter } = require('../controllers/characters');
+const { getCharacters} = require('../controllers/characters');
 const router = express.Router();
 const { Character} = require('../db.js');
 
@@ -20,6 +20,20 @@ router.post('/new', async (req, res) => {
             image
         });
         return res.status(200).json(newCharacterDB);
+    }catch(err){
+        console.log(err);
+        return res.status(500).json(err);
+    }
+});
+router.delete('/delete/:id', async (req, res) => {
+    try{
+        const {id} = req.params;
+        const deletedCharacter = await Character.destroy({
+            where: {
+                id
+            }
+        });
+        return res.status(200).json({deletedCharacter, message: "Character deleted"});
     }catch(err){
         console.log(err);
         return res.status(500).json(err);
